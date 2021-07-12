@@ -3,8 +3,11 @@ import unittest
 import coverage
 
 from flask_script import Manager
-from project.server import app, db
+from project.server import db
 from flask_migrate import Migrate, MigrateCommand
+from project.server import create_app
+
+app = create_app()
 
 
 COV = coverage.coverage(
