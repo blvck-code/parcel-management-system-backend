@@ -52,8 +52,10 @@ class CreateUserAPI(MethodView):
                 email = post_data.get('email')
                 password = post_data.get('password')
                 role = post_data.get('role')
+                print(email)
 
-                user = User.query.filter_by(email=email)
+                user = User.query.filter_by(email=email).first()
+                print(user)
                 if user:
                     responseObject = {
                         'status': 'fail',

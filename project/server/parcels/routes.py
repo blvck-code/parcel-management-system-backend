@@ -96,107 +96,113 @@ class DetailParcelAPI(MethodView):
     # decorators = [jwt_required()]
     # @todo ===> add auth
     def get(self, parcel_id):
-        print(parcel_id)
-        # try:
-        parcel = Parcel.query.filter_by(id=parcel_id).first()
-        teller_id = parcel.teller_id
-        sender_id = parcel.sender_id
-        receiver_id = parcel.receiver_id
+        try:
+            parcel = Parcel.query.filter_by(id=parcel_id).first()
+            teller_id = parcel.teller_id
+            sender_id = parcel.sender_id
+            receiver_id = parcel.receiver_id
 
-        sender = Sender.query.filter_by(id=sender_id).first()
-        receiver = Receiver.query.filter_by(id=receiver_id).first()
-        teller = User.query.filter_by(id=teller_id).first()
+            sender = Sender.query.filter_by(id=sender_id).first()
+            receiver = Receiver.query.filter_by(id=receiver_id).first()
+            teller = User.query.filter_by(id=teller_id).first()
 
-        responseObject = {
-            'id': parcel.id,
-            'item': parcel.item,
-            'quantity': parcel.quantity,
-            'dispatch_date': parcel.dispatch_date,
-            'arrival_date': parcel.arrival_date,
-            'delivered_date': parcel.delivered_date,
-            'delivered': parcel.delivered,
-            'cost': parcel.cost,
-            'sender': {
-                'id': sender.id,
-                'full_name': sender.full_name,
-                'phone': sender.phone,
-                'email': sender.email,
-                'center': sender.center
-            },
-            'receiver': {
-                'id': receiver.id,
-                'full_name': receiver.full_name,
-                'phone': receiver.phone,
-                'email': receiver.email,
-                'center': receiver.center
-            },
-            'teller': {
-                'id': teller.id,
-                'first_name': teller.first_name,
-                'last_name': teller.last_name,
-                'email': teller.email,
-                'role': teller.role
-            },
-        }
-        return make_response(jsonify(responseObject)), 200
-        # except Exception as e:
-        #     responseObject = {
-        #         'status': 'fail',
-        #         'message': 'Could not find parcel with that id. Please try again'
-        #     }
-        #     return make_response(jsonify(responseObject)), 400
+            responseObject = {
+                'id': parcel.id,
+                'item': parcel.item,
+                'quantity': parcel.quantity,
+                'dispatch_date': parcel.dispatch_date,
+                'arrival_date': parcel.arrival_date,
+                'delivered_date': parcel.delivered_date,
+                'delivered': parcel.delivered,
+                'cost': parcel.cost,
+                'sender': {
+                    'id': sender.id,
+                    'full_name': sender.full_name,
+                    'phone': sender.phone,
+                    'email': sender.email,
+                    'center': sender.center
+                },
+                'receiver': {
+                    'id': receiver.id,
+                    'full_name': receiver.full_name,
+                    'phone': receiver.phone,
+                    'email': receiver.email,
+                    'center': receiver.center
+                },
+                'teller': {
+                    'id': teller.id,
+                    'first_name': teller.first_name,
+                    'last_name': teller.last_name,
+                    'email': teller.email,
+                    'role': teller.role
+                },
+            }
+            return make_response(jsonify(responseObject)), 200
+        except Exception as e:
+            responseObject = {
+                'status': 'fail',
+                'message': 'Could not find parcel with that id. Please try again'
+            }
+            return make_response(jsonify(responseObject)), 400
 
 class UpdateParcelAPI(MethodView):
     decorators = [jwt_required()]
-    def put(self, parcel_no):
-        # try:
-        parcel = Parcel.query.filter_by(parcel_no=parcel_no).first()
+    def put(self, parcel_id):
+        try:
+            update_data = request.get_json()
+            parcel = Parcel.query.filter_by(id=parcel_id).first()
+            teller_id = parcel.teller_id
+            sender_id = parcel.sender_id
+            receiver_id = parcel.receiver_id
 
-        update_data = request.get_json()
+            sender = Sender.query.filter_by(id=sender_id).first()
+            receiver = Receiver.query.filter_by(id=receiver_id).first()
+            teller = User.query.filter_by(id=teller_id).first()
 
-        sender_name = update_data.get('sender_name', None)
-        sender_phone = update_data.get('sender_phone', None)
-        sender_address = update_data.get('sender_address', None)
-        receiver_name = update_data.get('receiver_name', None)
-        receiver_phone = update_data.get('receiver_phone', None)
-        parcel_quantity = update_data.get('parcel_quantity', None)
+            parcel.delivered = update_data.get('delivered')
+            parcel.delivered_date = update_data.get('delivered_date')
 
-        if sender_phone:
-            parcel.sender_name = sender_name
-        if sender_phone:
-            parcel.sender_phone = sender_phone
-        if sender_address:
-            parcel.sender_address = sender_address
-        if receiver_name:
-            parcel.receiver_name = receiver_name
-        if receiver_phone:
-            parcel.receiver_phone = receiver_phone
-        if parcel_quantity:
-            parcel.parcel_quantity = parcel_quantity
+            db.session.commit()
 
-        booked_by = User.query.filter_by(id=get_jwt_identity()).first()
-        parcel.teller_id = get_jwt_identity()
+            responseObject = {
+                'id': parcel.id,
+                'item': parcel.item,
+                'quantity': parcel.quantity,
+                'dispatch_date': parcel.dispatch_date,
+                'arrival_date': parcel.arrival_date,
+                'delivered_date': parcel.delivered_date,
+                'delivered': parcel.delivered,
+                'cost': parcel.cost,
+                'sender': {
+                    'id': sender.id,
+                    'full_name': sender.full_name,
+                    'phone': sender.phone,
+                    'email': sender.email,
+                    'center': sender.center
+                },
+                'receiver': {
+                    'id': receiver.id,
+                    'full_name': receiver.full_name,
+                    'phone': receiver.phone,
+                    'email': receiver.email,
+                    'center': receiver.center
+                },
+                'teller': {
+                    'id': teller.id,
+                    'first_name': teller.first_name,
+                    'last_name': teller.last_name,
+                    'email': teller.email,
+                    'role': teller.role
+                },
+            }
 
-        db.session.commit()
-
-        responseObject = {
-            'id': parcel.id,
-            'sender_name': parcel.sender_name,
-            'sender_phone': parcel.sender_phone,
-            'sender_address': parcel.sender_address,
-            'receiver_name': parcel.receiver_name,
-            'receiver_phone': parcel.receiver_phone,
-            'parcel_quantity': parcel.parcel_quantity,
-            'parcel_no': parcel.parcel_no,
-            'booked_by': f'{booked_by.first_name} {booked_by.last_name}',
-        }
-        return make_response(jsonify(responseObject)), 200
-        # except Exception as e:
-        #     responseObject = {
-        #         'status': 'fail',
-        #         'message': 'Could not find parcel with that id. Please try again'
-        #     }
-        #     return make_response(jsonify(responseObject)), 400
+            return make_response(jsonify(responseObject)), 200
+        except Exception as e:
+            responseObject = {
+                'status': 'fail',
+                'message': 'Could not find parcel with that id. Please try again'
+            }
+            return make_response(jsonify(responseObject)), 400
 
 class DeleteParcelAPI(MethodView):
     decorators = [jwt_required()]
@@ -243,7 +249,7 @@ parcel_blueprint.add_url_rule(
 )
 
 parcel_blueprint.add_url_rule(
-    '/api/parcels/<string:parcel_no>',
+    '/api/parcels/<string:parcel_id>',
     view_func=parcels_update_view,
     methods=['PUT']
 )

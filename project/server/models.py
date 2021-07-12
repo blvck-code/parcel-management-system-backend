@@ -1,7 +1,7 @@
 import datetime
 import secrets
-from project.server import app, db, bcrypt
-
+from project.server import db, bcrypt
+from flask import current_app as app
 class User(db.Model):
     __tablename__ = 'user'
     id = db.Column(db.Integer, primary_key=True, nullable=False)

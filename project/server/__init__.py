@@ -7,31 +7,47 @@ from flask_jwt_extended import JWTManager
 from flask_cors import CORS
 from flask_rest_paginate import Pagination
 
-app = Flask(__name__)
-app.config.from_object(DevelopmentConfig)
-CORS(app, origins="*", headers=['Content-Type', 'Authorization'], expose_headers='Authorization')
+# app = Flask(__name__)
+# app.config.from_object(DevelopmentConfig)
+# CORS(app, origins="*", headers=['Content-Type', 'Authorization'], expose_headers='Authorization')
 
-db = SQLAlchemy(app)
-bcrypt = Bcrypt(app)
-ma = Marshmallow(app)
-jwt = JWTManager(app)
+db = SQLAlchemy()
+bcrypt = Bcrypt()
+ma = Marshmallow()
+jwt = JWTManager()
 
-from project.server.users.routes import user_blueprint
-from project.server.auth.routes import auth_blueprint
-from project.server.parcels.routes import parcel_blueprint
-from project.server.sender.routes import customer_blueprint
-from project.server.receiver.routes import receiver_blueprint
-
-app.register_blueprint(user_blueprint)
-app.register_blueprint(auth_blueprint)
-app.register_blueprint(parcel_blueprint)
-app.register_blueprint(customer_blueprint)
-app.register_blueprint(receiver_blueprint)
-
-# def create_app(config_class=DevelopmentConfig):
-#     app = Flask(__name__)
-#     app.config.from_object(DevelopmentConfig)
-#     db.init_app(app)
-#     bcrypt.init_app(app)
+# from project.server.users.routes import user_blueprint
+# from project.server.auth.routes import auth_blueprint
+# from project.server.parcels.routes import parcel_blueprint
+# from project.server.sender.routes import customer_blueprint
+# from project.server.receiver.routes import receiver_blueprint
 #
-#     return app
+# app.register_blueprint(user_blueprint)
+# app.register_blueprint(auth_blueprint)
+# app.register_blueprint(parcel_blueprint)
+# app.register_blueprint(customer_blueprint)
+# app.register_blueprint(receiver_blueprint)
+
+def create_app(config_class=DevelopmentConfig):
+    app = Flask(__name__)
+    app.config.from_object(DevelopmentConfig)
+    CORS(app, origins="*", headers=['Content-Type', 'Authorization'], expose_headers='Authorization')
+
+    db.init_app(app)
+    bcrypt.init_app(app)
+    ma.init_app(app)
+    jwt.init_app(app)
+
+    from project.server.users.routes import user_blueprint
+    from project.server.auth.routes import auth_blueprint
+    from project.server.parcels.routes import parcel_blueprint
+    from project.server.sender.routes import customer_blueprint
+    from project.server.receiver.routes import receiver_blueprint
+
+    app.register_blueprint(user_blueprint)
+    app.register_blueprint(auth_blueprint)
+    app.register_blueprint(parcel_blueprint)
+    app.register_blueprint(customer_blueprint)
+    app.register_blueprint(receiver_blueprint)
+
+    return app
