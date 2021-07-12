@@ -7,6 +7,7 @@ class BaseConfig(object):
     JWT_SECRET_KEY = "leDqP8cc8MNoqSXXmvfjWuau8OowRXavyw"
     BCRYPT_LOGS_ROUNDS = 13
     SQLALCHEMY_DATABASE_URI = 'sqlite:///database.sqlite'
+    PAGINATE_PAGINATION_OBJECT_KEY = None
     SQLALCHEMY_TRACK_MODIFICATIONS = False
 
 class DevelopmentConfig(BaseConfig):

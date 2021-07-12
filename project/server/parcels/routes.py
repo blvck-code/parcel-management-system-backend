@@ -7,7 +7,7 @@ from flask_jwt_extended import (
 )
 from flask import Blueprint, make_response, jsonify, request
 
-from project.server import ma, db
+from project.server import ma, db, pagination
 from project.server.models import Parcel, User, Receiver,Sender
 from flask_cors import cross_origin
 from project.server.utils import get_recipient_id, get_customer_id
@@ -36,6 +36,21 @@ class ListParcelAPI(MethodView):
     def get(self):
         try:
             category = request.args.get('category')
+
+            # res = pagination.paginate(
+            #     Parcel,
+            #     parcels_schema,
+            #     True,
+            #     pagination_schema_hook=lambda current_page, page_obj: {
+            #         'next': page_obj.has_next,
+            #         'prev': page_obj.has_prev,
+            #         'current': current_page,
+            #         'pages': page_obj.pages,
+            #         'per_page': page_obj.per_page,
+            #         'total': page_obj.total
+            #     },
+            # )
+            # return res
 
             if category == 'received':
                 parcels = Parcel.query.filter_by(delivered=True)

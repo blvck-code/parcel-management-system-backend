@@ -3,20 +3,12 @@ language: python
 python:
   - "3.9"
   - "3.8"
-  - "3.6"
-  - "3.5"
-  - "3.4"
-  - "2.7"
 
 service:
   - sqlite
 
 install:
   - pip install -r requirements.txt
-  - pip install coveralls
 
 script:
-  - python manage.py cov
-
-after_success:
-  coveralls
+  - python manage.py test
