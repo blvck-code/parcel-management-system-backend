@@ -1,6 +1,8 @@
 from flask_testing import TestCase
-from project.server import app, db
+from project.server import db, create_app
 from project.server.config import TestingConfig
+
+app = create_app()
 
 class BaseTestCase(TestCase):
     """ Base Test """

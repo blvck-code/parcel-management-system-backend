@@ -3,8 +3,10 @@ import unittest
 
 from project.server.models import User
 from flask_testing import TestCase
-from project.server import app, db
+from project.server import create_app, db
 from project.tests.base import BaseTestCase
+
+app = create_app()
 
 def register_user(self, email, first_name, last_name, password, role):
     return self.client.post(
